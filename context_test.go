@@ -2,9 +2,9 @@ package gg
 
 import (
 	"crypto/md5"
-	"flag"
 	"fmt"
 	"image/color"
+	"math"
 	"math/rand"
 	"testing"
 )
@@ -12,8 +12,8 @@ import (
 var save bool
 
 func init() {
-	flag.BoolVar(&save, "save", false, "save PNG output for each test case")
-	flag.Parse()
+	//flag.BoolVar(&save, "save", false, "save PNG output for each test case")
+	//flag.Parse()
 }
 
 func hash(dc *Context) string {
@@ -199,7 +199,7 @@ func TestDrawStringWrapped(t *testing.T) {
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
-	dc.DrawStringWrapped("Hello, world! How are you?", 50, 50, 0.5, 0.5, 90, 1.5, AlignCenter)
+	dc.DrawStringWrapped("Hello, world! How are you?", 50, 50, 0.5, 0.5, 90, 1.5, AlignCenter, false)
 	saveImage(dc, "TestDrawStringWrapped")
 	checkHash(t, dc, "8d92f6aae9e8b38563f171abd00893f8")
 }
@@ -319,5 +319,30 @@ func BenchmarkCircles(b *testing.B) {
 			dc.SetRGB(1, 1, 1)
 		}
 		dc.Fill()
+	}
+}
+
+func BenchmarkConcat(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		im1, err := LoadPNG("examples/baboon.png")
+		if err != nil {
+			panic(err)
+		}
+
+		im2, err := LoadPNG("examples/gopher.png")
+		if err != nil {
+			panic(err)
+		}
+
+		s1 := im1.Bounds().Size()
+		s2 := im2.Bounds().Size()
+
+		width := int(math.Max(float64(s1.X), float64(s2.X)))
+		height := s1.Y + s2.Y
+
+		dc := NewContext(width, height)
+		dc.DrawImage(im1, 0, 0)
+		dc.DrawImage(im2, 0, s1.Y)
+		dc.SavePNG("out.png")
 	}
 }

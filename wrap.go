@@ -25,10 +25,26 @@ func splitOnSpace(x string) []string {
 	return result
 }
 
-func wordWrap(m measureStringer, s string, width float64) []string {
+func splitRune(x string) []string {
+	var result []string
+	for _, c := range x {
+		result = append(result, string(c))
+	}
+	return result
+}
+
+func splitString(x string, breakWord bool) []string {
+	if breakWord {
+		return splitRune(x)
+	} else {
+		return splitOnSpace(x)
+	}
+}
+
+func wordWrap(m measureStringer, s string, width float64, breakWord bool) []string {
 	var result []string
 	for _, line := range strings.Split(s, "\n") {
-		fields := splitOnSpace(line)
+		fields := splitString(line, breakWord)
 		if len(fields)%2 == 1 {
 			fields = append(fields, "")
 		}

@@ -253,7 +253,7 @@ func (dc *Context) SetHexColor(x string) {
 // SetRGBA255 sets the current color. r, g, b, a values should be between 0 and
 // 255, inclusive.
 func (dc *Context) SetRGBA255(r, g, b, a int) {
-	dc.color = color.NRGBA{uint8(r), uint8(g), uint8(b), uint8(a)}
+	dc.color = color.NRGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: uint8(a)}
 	dc.setFillAndStrokeColor(dc.color)
 }
 
@@ -267,10 +267,10 @@ func (dc *Context) SetRGB255(r, g, b int) {
 // inclusive.
 func (dc *Context) SetRGBA(r, g, b, a float64) {
 	dc.color = color.NRGBA{
-		uint8(r * 255),
-		uint8(g * 255),
-		uint8(b * 255),
-		uint8(a * 255),
+		R: uint8(r * 255),
+		G: uint8(g * 255),
+		B: uint8(b * 255),
+		A: uint8(a * 255),
 	}
 	dc.setFillAndStrokeColor(dc.color)
 }
@@ -765,8 +765,8 @@ func (dc *Context) DrawStringAnchored(s string, x, y, ax, ay float64) {
 // DrawStringWrapped word-wraps the specified string to the given max width
 // and then draws it at the specified anchor point using the given line
 // spacing and text alignment.
-func (dc *Context) DrawStringWrapped(s string, x, y, ax, ay, width, lineSpacing float64, align Align) {
-	lines := dc.WordWrap(s, width)
+func (dc *Context) DrawStringWrapped(s string, x, y, ax, ay, width, lineSpacing float64, align Align, breakWord bool) {
+	lines := dc.WordWrap(s, width, breakWord)
 
 	// sync h formula with MeasureMultilineString
 	h := float64(len(lines)) * dc.fontHeight * lineSpacing
@@ -826,8 +826,8 @@ func (dc *Context) MeasureString(s string) (w, h float64) {
 
 // WordWrap wraps the specified string to the given max width and current
 // font face.
-func (dc *Context) WordWrap(s string, w float64) []string {
-	return wordWrap(dc, s, w)
+func (dc *Context) WordWrap(s string, w float64, breakWord bool) []string {
+	return wordWrap(dc, s, w, breakWord)
 }
 
 // Transformation Matrix Operations
