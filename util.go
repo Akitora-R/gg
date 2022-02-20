@@ -1,3 +1,5 @@
+/*~~~*/
+
 package gg
 
 import (
