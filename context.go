@@ -8,6 +8,7 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
+	"log"
 	"math"
 	"strings"
 
@@ -785,6 +786,7 @@ func (dc *Context) DrawStringWrapped(s string, x, y, ax, ay, width, lineSpacing 
 		x += width
 	}
 	ay = 1
+	log.Println(dc.fontHeight * lineSpacing * float64(len(lines)))
 	for _, line := range lines {
 		dc.DrawStringAnchored(line, x, y, ax, ay)
 		y += dc.fontHeight * lineSpacing

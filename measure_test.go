@@ -5,9 +5,11 @@ import (
 	"testing"
 )
 
+const fontPath = "test_res/fonts/msyh.ttc"
+
 func TestStringWrapped(t *testing.T) {
 	dc := NewContext(1000, 1000)
-	fontFace, err := LoadFontFace("test_res/fonts/msyh.ttc", 38)
+	fontFace, err := LoadFontFace(fontPath, 38)
 	if err != nil {
 		panic(err)
 	}
@@ -22,9 +24,9 @@ func TestStringWrapped(t *testing.T) {
 }
 
 func TestWordMeasure(t *testing.T) {
-	fontFace, err := LoadFontFace("test_res/fonts/msyh.ttc", 18)
+	fontFace, err := LoadFontFace(fontPath, 38)
 	if err != nil {
 		panic(err)
 	}
-	log.Println(MeasureStringHeight("Hello, world! How are you?", 90, 18, 1.5, fontFace, false))
+	log.Println(MeasureStringHeight("Hello, world! How are you?", 90, 38, 1.5, fontFace, true))
 }
